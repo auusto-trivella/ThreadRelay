@@ -11,15 +11,25 @@ package threadrelay;
 public class Atleta extends Thread {
     
     IntBox box;
-    int id;
+    int runner;
 
-    public Atleta(IntBox box, int id) {
+    public Atleta(IntBox box, int runner) {
         this.box = box;
-        this.id = id;
+        this.runner = runner;
     }
     public void run(){
         while(true){
-            
+            if(box.stato==0){
+                box.stato=runner;
+                System.out.println("l'atleta "+runner+" ha il testimone");
+                try{Thread.sleep(1000);}
+                catch(Exception e){}
+                System.out.println("l'atleta "+runner+" ha passato testimone");//deve passarlo quando arriva a 90
+                runner++;//forse devo far aumentare lo stato e non il runner
+            }
+            else{
+                
+            }
         }
     }
 }

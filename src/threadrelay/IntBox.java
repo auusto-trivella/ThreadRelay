@@ -9,5 +9,5 @@ package threadrelay;
  * @author trivella.augusto
  */
 public class IntBox {
-    int stato=0; 
+    int stato=0; //1 secondo atleta, 2 terzo atleta ecc...
 }
