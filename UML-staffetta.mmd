@@ -1,0 +1,21 @@
+classDiagram
+direction TB
+    class ThreadRelay {
+    }
+
+    class Thread {
+    }
+
+    class Staffetta {
+	    -int id
+	    -Box box
+	    +run()
+    }
+
+    class IntBox {
+	    -int stato
+    }
+
+    Thread --|> Staffetta
+    ThreadRelay --o Staffetta
+    IntBox -- Staffetta
