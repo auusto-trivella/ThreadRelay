@@ -4,25 +4,25 @@
  */
 package threadrelay;
 
-/**
- *
- * @author delfo
- */
+
 public class ThreadRelay {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        Atleta a1= new Atleta(0,0);
-        Atleta a2= new Atleta(0,0);
-        Atleta a3= new Atleta(0,0);
-        Atleta a4= new Atleta(0,0);
-        
-        a1.start();
-        a2.start();
-        a3.start();
-        a4.start();
+            
+            FormStaffetta frame = new FormStaffetta();
+            frame.setTitle("Staffetta 4x100 - Pattern Observer");
+            frame.setVisible(true);
+
+            Testimone testimone = new Testimone();
+
+            Atleta a1 = new Atleta(testimone, 1);
+            Atleta a2 = new Atleta(testimone, 2);
+            Atleta a3 = new Atleta(testimone, 3);
+            Atleta a4 = new Atleta(testimone, 4);
+
+            a1.start();
+            a2.start();
+            a3.start();
+            a4.start();
     }
-    
 }

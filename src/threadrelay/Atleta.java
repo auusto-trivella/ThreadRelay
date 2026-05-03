@@ -9,27 +9,31 @@ package threadrelay;
  * @author trivella.augusto
  */
 public class Atleta extends Thread {
-    
-    IntBox box;
-    int runner;
+    private Testimone box;
+    private int idAtleta;
 
-    public Atleta(IntBox box, int runner) {
+    public Atleta(Testimone box, int idAtleta) {
         this.box = box;
-        this.runner = runner;
+        this.idAtleta = idAtleta;
     }
-    public void run(){
-        while(true){
-            if(box.stato==0){
-                box.stato=runner;
-                System.out.println("l'atleta "+runner+" ha il testimone");
-                try{Thread.sleep(1000);}
-                catch(Exception e){}
-                System.out.println("l'atleta "+runner+" ha passato testimone");//deve passarlo quando arriva a 90
-                runner++;//forse devo far aumentare lo stato e non il runner
+
+    public void run() {
+        try {
+            synchronized (box) {
+                // aspetta il suo turno
+                while (box.getStato() != idAtleta) {
+                    box.wait();
+                }
             }
-            else{
-                
-            }
+
+            System.out.println("Atleta " + idAtleta + " ha preso il testimone");
+            Thread.sleep(1000);
+            System.out.println("Atleta " + idAtleta + " ha passato il testimone");
+
+            box.passaTestimone(idAtleta);
+            
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
