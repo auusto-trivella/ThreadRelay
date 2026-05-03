@@ -65,12 +65,8 @@ public class FormStaffetta extends javax.swing.JFrame implements PropertyChangeL
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+public static void main(String args[]) {
+        // 1. Setup Look & Feel
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -78,13 +74,60 @@ public class FormStaffetta extends javax.swing.JFrame implements PropertyChangeL
                     break;
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            // Loggare errore se necessario
         }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FormStaffetta().setVisible(true));
+        // 2. Avvio dell'applicazione
+        java.awt.EventQueue.invokeLater(() -> {
+            // Crea la finestra
+            FormStaffetta frame = new FormStaffetta();
+            frame.setVisible(true);
+
+            // Crea il Motore della staffetta
+            Testimone testimone = new Testimone();
+            testimone.addPropertyChangeListener(frame); // La finestra osserva il testimone
+
+            // Avvia i thread atleti
+            for (int i = 1; i <= 4; i++) {
+                new Atleta(testimone, i).start();
+            }
+
+            // Piccolo thread per dare il "VIA" dopo 2 secondi
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000);
+                    testimone.setStato(1); 
+                } catch (InterruptedException e) {}
+            }).start();
+        });
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    private void initComponents() {
+        jLabel1 = new javax.swing.JLabel();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Staffetta Thread Relay");
+
+        jLabel1.setText("jLabel1");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE(388, Short.MAX_VALUE) )
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(jLabel1)
+                .addContainerGap(180, Short.MAX_VALUE))
+        );
+        pack();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
