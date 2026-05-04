@@ -1,37 +1,104 @@
+
 package threadrelay;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import javax.swing.SwingUtilities;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
-public class FormStaffetta extends javax.swing.JFrame implements PropertyChangeListener {
+public class FormStaffetta extends javax.swing.JFrame {
 
-    // Usiamo la variabile che NetBeans ha già dichiarato in fondo alla classe
-    // private javax.swing.JLabel jLabel1; 
+    // Array di pannelli e label per gestire i 4 atleti facilmente
+    private JPanel[] pannelliAtleti = new JPanel[4];
+    private JLabel[] labelStatoAtleti = new JLabel[4];
+    private JLabel labelMessaggioPrincipale;
 
     public FormStaffetta() {
         initComponents();
-        // Invece di creare una nuova label, usiamo quella dell'interfaccia di NetBeans
-        jLabel1.setText("In attesa del via...");
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        this.setLocationRelativeTo(null); 
+        this.setTitle("Gara di Staffetta 4x100");
+        this.setSize(500, 400);
+        this.setLocationRelativeTo(null);
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("stato".equals(evt.getPropertyName())) {
-            int nuovoValore = (int) evt.getNewValue();
+    private void initComponents() {
+        // Layout principale: un bordo con padding
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        // 1. Titolo e Messaggio in alto
+        labelMessaggioPrincipale = new JLabel("In attesa dello sparo d'inizio...", SwingConstants.CENTER);
+        labelMessaggioPrincipale.setFont(new Font("SansSerif", Font.BOLD, 18));
+        mainPanel.add(labelMessaggioPrincipale, BorderLayout.NORTH);
+
+        // 2. Griglia centrale per i 4 atleti
+        JPanel gridAtleti = new JPanel(new GridLayout(4, 1, 10, 10));
+        
+        for (int i = 0; i < 4; i++) {
+            pannelliAtleti[i] = new JPanel(new BorderLayout());
+            pannelliAtleti[i].setBackground(new Color(240, 240, 240)); // Grigio chiaro (inattivo)
+            pannelliAtleti[i].setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
             
-            SwingUtilities.invokeLater(() -> {
-                if (nuovoValore <= 4) {
-                    jLabel1.setText("<html><div style='text-align: center;'><h2>GARA IN CORSO</h2>"
-                            + "Atleta attuale: <b style='font-size:18px; color:blue;'>" + nuovoValore + "</b></div></html>");
-                } else {
-                    jLabel1.setText("<html><h2 style='color:green;'>GARA CONCLUSA!</h2>Tutti hanno corso.</html>");
-                }
-            });
+            JLabel nomeAtleta = new JLabel("  ATLETA " + (i + 1));
+            nomeAtleta.setFont(new Font("SansSerif", Font.BOLD, 14));
+            
+            labelStatoAtleti[i] = new JLabel("In attesa...  ", SwingConstants.RIGHT);
+            labelStatoAtleti[i].setFont(new Font("SansSerif", Font.ITALIC, 12));
+            
+            pannelliAtleti[i].add(nomeAtleta, BorderLayout.WEST);
+            pannelliAtleti[i].add(labelStatoAtleti[i], BorderLayout.EAST);
+            
+            gridAtleti.add(pannelliAtleti[i]);
         }
+        
+        mainPanel.add(gridAtleti, BorderLayout.CENTER);
+
+        // 3. Footer con pulsante o info (opzionale)
+        JLabel footer = new JLabel("Simulazione Thread Java", SwingConstants.CENTER);
+        footer.setForeground(Color.GRAY);
+        mainPanel.add(footer, BorderLayout.SOUTH);
+
+        this.add(mainPanel);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
+    /**
+     * Metodo chiamato dagli Atleti per aggiornare la grafica
+     */
+    public void aggiornaInterfaccia(int idAtletaCorrente) {
+        SwingUtilities.invokeLater(() -> {
+            // Se idAtletaCorrente è tra 1 e 4 (gara in corso)
+            if (idAtletaCorrente >= 1 && idAtletaCorrente <= 4) {
+                labelMessaggioPrincipale.setText("GARA IN CORSO!");
+                labelMessaggioPrincipale.setForeground(new Color(200, 0, 0)); // Rosso corsa
+                
+                for (int i = 0; i < 4; i++) {
+                    int idLogico = i + 1;
+                    if (idLogico == idAtletaCorrente) {
+                        // Atleta che corre ora
+                        pannelliAtleti[i].setBackground(Color.YELLOW);
+                        pannelliAtleti[i].setBorder(BorderFactory.createLineBorder(Color.ORANGE, 2));
+                        labelStatoAtleti[i].setText("STA CORRENDO!  ");
+                        labelStatoAtleti[i].setForeground(Color.BLACK);
+                    } else if (idLogico < idAtletaCorrente) {
+                        // Atleti che hanno già finito
+                        pannelliAtleti[i].setBackground(new Color(200, 255, 200)); // Verde chiaro
+                        labelStatoAtleti[i].setText("ARRIVATO  ");
+                        labelStatoAtleti[i].setForeground(new Color(0, 100, 0));
+                    }
+                }
+            } 
+            // Se l'id è 5, la gara è finita
+            else if (idAtletaCorrente > 4) {
+                labelMessaggioPrincipale.setText("GARA CONCLUSA!");
+                labelMessaggioPrincipale.setForeground(new Color(0, 150, 0)); // Verde vittoria
+                // Tutti verdi
+                for (int i = 0; i < 4; i++) {
+                    pannelliAtleti[i].setBackground(new Color(150, 255, 150));
+                    labelStatoAtleti[i].setText("FINE GARA  ");
+                }
+            }
+        });
+    }
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -66,7 +133,7 @@ public class FormStaffetta extends javax.swing.JFrame implements PropertyChangeL
      * @param args the command line arguments
      */
 public static void main(String args[]) {
-        // 1. Setup Look & Feel
+        /* Set the Nimbus look and feel */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -75,62 +142,34 @@ public static void main(String args[]) {
                 }
             }
         } catch (Exception ex) {
-            // Loggare errore se necessario
+            java.util.logging.Logger.getLogger(FormStaffetta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        // 2. Avvio dell'applicazione
+        /* Crea e visualizza la form */
         java.awt.EventQueue.invokeLater(() -> {
-            // Crea la finestra
             FormStaffetta frame = new FormStaffetta();
             frame.setVisible(true);
 
-            // Crea il Motore della staffetta
+            // Logica di avvio della staffetta
             Testimone testimone = new Testimone();
-            testimone.addPropertyChangeListener(frame); // La finestra osserva il testimone
 
-            // Avvia i thread atleti
+            // Creiamo i 4 atleti passandogli il riferimento a questa finestra (frame)
             for (int i = 1; i <= 4; i++) {
-                new Atleta(testimone, i).start();
+                new Atleta(testimone, i, frame).start();
             }
 
-            // Piccolo thread per dare il "VIA" dopo 2 secondi
+            // Thread starter: dà il via dopo 2 secondi
             new Thread(() -> {
                 try {
                     Thread.sleep(2000);
-                    testimone.setStato(1); 
-                } catch (InterruptedException e) {}
+                    testimone.setStato(1); // Parte l'atleta 1
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }).start();
         });
     }
-
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
-        jLabel1 = new javax.swing.JLabel();
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Staffetta Thread Relay");
-
-        jLabel1.setText("jLabel1");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE(388, Short.MAX_VALUE) )
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(100, 100, 100)
-                .addComponent(jLabel1)
-                .addContainerGap(180, Short.MAX_VALUE))
-        );
-        pack();
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
-}
+

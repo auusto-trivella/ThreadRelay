@@ -9,16 +9,16 @@ public class ThreadRelay {
 
     public static void main(String[] args) {
             
-            FormStaffetta frame = new FormStaffetta();
-            frame.setTitle("Staffetta 4x100 - Pattern Observer");
+FormStaffetta frame = new FormStaffetta();
+            frame.setTitle("Staffetta 4x100 - Chiamata Diretta");
             frame.setVisible(true);
 
             Testimone testimone = new Testimone();
 
-            Atleta a1 = new Atleta(testimone, 1);
-            Atleta a2 = new Atleta(testimone, 2);
-            Atleta a3 = new Atleta(testimone, 3);
-            Atleta a4 = new Atleta(testimone, 4);
+            Atleta a1 = new Atleta(testimone, 1, frame);
+            Atleta a2 = new Atleta(testimone, 2, frame);
+            Atleta a3 = new Atleta(testimone, 3, frame);
+            Atleta a4 = new Atleta(testimone, 4, frame);
 
             a1.start();
             a2.start();

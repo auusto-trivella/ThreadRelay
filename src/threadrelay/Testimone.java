@@ -19,6 +19,11 @@ public class Testimone {
         }
     }
 
+    public synchronized void setStato(int nuovoStato) {
+        this.stato = nuovoStato;
+        notifyAll();
+    }
+    
     public synchronized int getStato() {
         return stato;
     }
