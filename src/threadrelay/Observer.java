@@ -9,5 +9,5 @@ package threadrelay;
  * @author augus
  */
 public interface Observer {
-    void update(int valore);
+    void update(int idAtleta, int metri);
 }
