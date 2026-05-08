@@ -25,10 +25,12 @@ public class Atleta extends Thread {
                     box.wait();
                 }
             }
-            for (int metri = 0; metri <= 100; metri += 10) {
+            for (int metri = 0; metri <= 100; metri += 2) {
                 box.controllaPausa();
                 Thread.sleep(box.getVelocita());
+                
                 box.aggiornaPosizione(idAtleta, metri);
+
                 if (metri == 90) {
                     box.passaTestimone(idAtleta);
                 }
