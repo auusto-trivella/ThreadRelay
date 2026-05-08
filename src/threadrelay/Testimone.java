@@ -11,13 +11,13 @@ public class Testimone implements Subject {
     private boolean inPausa = false;
     private ArrayList<Observer> osservatori = new ArrayList<>();
 
-    // METODO 1: Per l'interfaccia Subject
+
     @Override
     public void addObserver(Observer o) {
         osservatori.add(o);
     }
 
-    // METODO 2: Per l'interfaccia Subject (notifica i metri)
+
     @Override
     public void notifyObservers(int idAtleta, int metri) {
         for (Observer o : osservatori) {
@@ -25,15 +25,17 @@ public class Testimone implements Subject {
         }
     }
 
-    // METODO 3: Quello che chiama l'Atleta per far muovere la barra
-    public void aggiornaPosizione(int id, int m) {
-        notifyObservers(id, m);
+public void aggiornaPosizione(int idAtleta, int metri) {
+    
+    for (Observer o : osservatori) {
+        o.update(idAtleta, metri);
     }
+}
 
-    // METODO 4: Per gestire il tasto Ferma/Continua
+   
     public synchronized void controllaPausa() throws InterruptedException {
         while (inPausa) {
-            wait(); // Il thread si ferma qui
+            wait();
         }
     }
 

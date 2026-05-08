@@ -1,5 +1,20 @@
 package threadrelay;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
 
 public class FormStaffetta extends javax.swing.JFrame implements Observer {
 
@@ -9,6 +24,7 @@ public class FormStaffetta extends javax.swing.JFrame implements Observer {
         this.testimone = t;
         initComponents();
         personalizzaBottoni();
+        personalizzaGraficaManualmente();
         this.setLocationRelativeTo(null);
     }
 
@@ -21,12 +37,81 @@ public class FormStaffetta extends javax.swing.JFrame implements Observer {
         jButton6.setText("VELOCE");
     }
 
+private void personalizzaGraficaManualmente() {
+        // 1. Pannello Principale (Sostituisce quello di NetBeans)
+        JPanel mainPanel = new JPanel(new BorderLayout(15, 15));
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        mainPanel.setBackground(new Color(245, 245, 245));
+        this.setContentPane(mainPanel);
+
+        // 2. Pannello ATLETI (Nord)
+        JPanel pnlAtleti = new JPanel(new GridLayout(4, 1, 5, 15));
+        pnlAtleti.setOpaque(false);
+        pnlAtleti.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.GRAY), "CORSIE ATLETI", 
+                TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)));
+        
+        JProgressBar[] barre = {jProgressBar1, jProgressBar2, jProgressBar3, jProgressBar4};
+        for (int i = 0; i < barre.length; i++) {
+            barre[i].setStringPainted(true);
+            barre[i].setFont(new Font("Arial", Font.BOLD, 12));
+            barre[i].setForeground(new Color(46, 204, 113)); // Verde smeraldo
+            pnlAtleti.add(barre[i]);
+        }
+
+        // 3. Label STATO (Centro)
+        jLabel1.setHorizontalAlignment(SwingConstants.CENTER);
+        jLabel1.setFont(new Font("Monospaced", Font.BOLD, 22));
+        jLabel1.setForeground(new Color(44, 62, 80));
+        jLabel1.setOpaque(true);
+        jLabel1.setBackground(Color.WHITE);
+        jLabel1.setBorder(BorderFactory.createLoweredBevelBorder());
+        jLabel1.setText("PRONTI AI POSTI...");
+        
+        // 4. Pannello BOTTONI (Sud)
+        JPanel pnlSud = new JPanel(new GridLayout(2, 1, 10, 10));
+        pnlSud.setOpaque(false);
+        
+        // Comandi
+        JPanel pnlComandi = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        pnlComandi.setOpaque(false);
+        btnStile(jButton1, new Color(52, 152, 219), Color.WHITE);
+        btnStile(jButton2, new Color(231, 76, 60), Color.WHITE);
+        btnStile(jButton3, new Color(241, 196, 15), Color.BLACK);
+        pnlComandi.add(jButton1);
+        pnlComandi.add(jButton2);
+        pnlComandi.add(jButton3);
+
+        // Velocità
+        JPanel pnlVel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        pnlVel.setOpaque(false);
+        pnlVel.add(new JLabel("RITMO: "));
+        pnlVel.add(jButton4);
+        pnlVel.add(jButton5);
+        pnlVel.add(jButton6);
+
+        pnlSud.add(pnlComandi);
+        pnlSud.add(pnlVel);
+
+        mainPanel.add(pnlAtleti, BorderLayout.NORTH);
+        mainPanel.add(jLabel1, BorderLayout.CENTER);
+        mainPanel.add(pnlSud, BorderLayout.SOUTH);
+
+        this.setSize(600, 500);
+    }
+
+    private void btnStile(JButton btn, Color sfondo, Color testo) {
+        btn.setBackground(sfondo);
+        btn.setForeground(testo);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
     @Override
     public void update(int idAtleta, int metri) {
-        // Aggiorna la label di stato
-        jLabel1.setText("<html>Atleta " + idAtleta + "<br>Metri: " + metri + "</html>");
+        jLabel1.setText("<html><center>ATLETA " + idAtleta + "<br>" + metri + " m</center></html>");
         
-        // Aggiorna la barra corrispondente (Assicurati di averle trascinate nella form)
         switch (idAtleta) {
             case 1: jProgressBar1.setValue(metri); break;
             case 2: jProgressBar2.setValue(metri); break;
