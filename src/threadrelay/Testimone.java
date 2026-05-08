@@ -4,46 +4,47 @@
  */
 package threadrelay;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 
-public class Testimone {
-    private int stato = 0; // Iniziamo da 0 per aspettare il "VIA"
-    private final PropertyChangeSupport support;
+public class Testimone implements Subject {
+    private int stato = 1;
+    private boolean inPausa = false;
+    private ArrayList<Observer> osservatori = new ArrayList<>();
 
-    public Testimone() {
-        // Inizializza il supporto per i listener
-        support = new PropertyChangeSupport(this);
+    // METODO 1: Per l'interfaccia Subject
+    @Override
+    public void addObserver(Observer o) {
+        osservatori.add(o);
     }
 
-    // Metodi per gestire gli osservatori
-    public void addPropertyChangeListener(PropertyChangeListener pcl) {
-        support.addPropertyChangeListener(pcl);
-    }
-
-    public synchronized void setStato(int nuovoStato) {
-        int vecchioStato = this.stato;
-        this.stato = nuovoStato;
-        // Notifica il cambiamento ai listener (la Form)
-        support.firePropertyChange("stato", vecchioStato, nuovoStato);
-        // Sveglia i thread Atleti in attesa
-        notifyAll();
-    }
-
-    public synchronized void passaTestimone(int attuale) {
-        if (this.stato == attuale) {
-            setStato(this.stato + 1);
+    // METODO 2: Per l'interfaccia Subject (notifica i metri)
+    @Override
+    public void notifyObservers(int idAtleta, int metri) {
+        for (Observer o : osservatori) {
+            o.update(idAtleta, metri);
         }
     }
 
-    public synchronized int getStato() {
-        return stato;
+    // METODO 3: Quello che chiama l'Atleta per far muovere la barra
+    public void aggiornaPosizione(int id, int m) {
+        notifyObservers(id, m);
     }
-}
-/*
+
+    // METODO 4: Per gestire il tasto Ferma/Continua
+    public synchronized void controllaPausa() throws InterruptedException {
+        while (inPausa) {
+            wait(); // Il thread si ferma qui
+        }
+    }
+
+    public synchronized void setPausa(boolean b) {
+        this.inPausa = b;
+        if (!b) notifyAll();
+    }
+
     public synchronized void passaTestimone(int attuale) {
         if (this.stato == attuale) {
-            this.stato++; 
+            this.stato++;
             notifyAll();
         }
     }
@@ -51,4 +52,9 @@ public class Testimone {
     public synchronized int getStato() {
         return stato;
     }
-*/
+
+    @Override
+    public void removeObserver(Observer o) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+}
