@@ -10,6 +10,7 @@ public class ThreadRelay {
 
         Testimone t = new Testimone();
         FormStaffetta f = new FormStaffetta(t);
+        t.addObserver(f);
         f.setVisible(true);
     }
 }
