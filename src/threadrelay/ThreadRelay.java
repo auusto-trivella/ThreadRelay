@@ -9,9 +9,9 @@ public class ThreadRelay {
 
     public static void main(String[] args) {
             
-            FormStaffetta frame = new FormStaffetta();
-            frame.setTitle("Staffetta 4x100 - Pattern Observer");
-            frame.setVisible(true);
+            //FormStaffetta frame = new FormStaffetta();
+            //frame.setTitle("Staffetta 4x100 - Pattern Observer");
+            //frame.setVisible(true);
 
             Testimone testimone = new Testimone();
 

@@ -9,6 +9,7 @@ package threadrelay;
  * @author trivella.augusto
  */
 public class Atleta extends Thread {
+
     private Testimone box;
     private int idAtleta;
 
@@ -26,12 +27,20 @@ public class Atleta extends Thread {
                 }
             }
 
-            System.out.println("Atleta " + idAtleta + " ha preso il testimone");
-            Thread.sleep(1000);
-            System.out.println("Atleta " + idAtleta + " ha passato il testimone");
+            System.out.println("Atleta " + idAtleta + " è partito!");
 
-            box.passaTestimone(idAtleta);
-            
+            for (int metri = 0; metri <= 90; metri += 10) {
+                Thread.sleep(100); 
+                if (metri == 90) {
+                    System.out.println("Atleta " + idAtleta + " ai 90m: CHIAMATA CAMBIO!");
+
+                    box.passaTestimone(idAtleta);
+                }
+            }
+
+            Thread.sleep(100);
+            System.out.println("Atleta " + idAtleta + " ha terminato i suoi 100m.");
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
