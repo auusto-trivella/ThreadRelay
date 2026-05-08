@@ -1,3 +1,5 @@
+package threadrelay;
+
 
 import threadrelay.Testimone;
 
@@ -7,6 +9,7 @@ import threadrelay.Testimone;
  */
 
 public class Atleta extends Thread {
+
     private Testimone box;
     private int idAtleta;
 
@@ -18,19 +21,19 @@ public class Atleta extends Thread {
     public void run() {
         try {
             synchronized (box) {
-                while (box.getStato() != idAtleta) { box.wait(); }
+                while (box.getStato() != idAtleta) {
+                    box.wait();
+                }
             }
-
             for (int metri = 0; metri <= 100; metri += 10) {
                 box.controllaPausa();
-                Thread.sleep(100);
-
+                Thread.sleep(box.getVelocita());
                 box.aggiornaPosizione(idAtleta, metri);
-
                 if (metri == 90) {
                     box.passaTestimone(idAtleta);
                 }
             }
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
     }
 }

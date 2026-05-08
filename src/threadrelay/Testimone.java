@@ -7,7 +7,7 @@ package threadrelay;
 import java.util.ArrayList;
 
 public class Testimone implements Subject {
-    private int stato = 1;
+    private int stato = 1, velocita=100;
     private boolean inPausa = false;
     private ArrayList<Observer> osservatori = new ArrayList<>();
 
@@ -53,8 +53,17 @@ public class Testimone implements Subject {
         return stato;
     }
 
+    public int getVelocita() {
+        return velocita;
+    }
+
+    public void setVelocita(int velocita) {
+        this.velocita = velocita;
+    }
+
     @Override
     public void removeObserver(Observer o) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
 }

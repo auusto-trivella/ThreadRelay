@@ -8,18 +8,8 @@ public class ThreadRelay {
 
     public static void main(String[] args) {
 
-            FormStaffetta frame = new FormStaffetta();
-            frame.setVisible(true);
-            Testimone testimone = new Testimone();
-
-            Atleta a1 = new Atleta(testimone, 1);
-            Atleta a2 = new Atleta(testimone, 2);
-            Atleta a3 = new Atleta(testimone, 3);
-            Atleta a4 = new Atleta(testimone, 4);
-
-            a1.start();
-            a2.start();
-            a3.start();
-            a4.start();
+        Testimone t = new Testimone();
+        FormStaffetta f = new FormStaffetta(t);
+        f.setVisible(true);
     }
 }
